@@ -25,3 +25,10 @@ networks:
 
 volumes:
   db:
+
+# Create Container 
+# docker compose up -d 
+# Roll back
+# docker compose down
+# if you want to start only speccified services/container: 
+# docker compose up -d my-ecommerce -d
