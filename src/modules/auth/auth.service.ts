@@ -61,17 +61,22 @@ export class AuthService {
             throw new ForbiddenException(AuthError.PASSWORD_NOT_CORRECT)
         }
         delete user.password
-        return await this.convertToJwtString(user.id, user.email)
+        return await this.signJwtToken(user.id, user.email)
     }
 
-    async convertToJwtString(userId: number , email: string):Promise<string>{
+    async signJwtToken(userId: number , email: string):Promise<{accessToken: string}>{
         const payload = {
             sub: userId,
             email
         }
-        return this.jwtService.signAsync(payload, {
-            expiresIn: '10m',
+
+        const jwtString = await this.jwtService.signAsync(payload, {
+            expiresIn: '10h',
             secret: this.configService.get('JWT_SECRET')
         })
+
+        return{
+            accessToken: jwtString
+        }
     }
 }
