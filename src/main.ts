@@ -6,8 +6,8 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = new DocumentBuilder()
-  .setTitle('Median')
-  .setDescription('The Median API description')
+  .setTitle('Ecommerce')
+  .setDescription('The Ecommerce API description')
   .setVersion('0.1')
   .build();
   const document = SwaggerModule.createDocument(app, config);

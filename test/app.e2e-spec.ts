@@ -1,24 +1,25 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import { Test } from '@nestjs/testing';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './../src/app.module';
-
-describe('AppController (e2e)', () => {
+import { PrismaService } from '../src/modules/prisma/prisma.service';
+describe('14234 (e2e)', () => {
   let app: INestApplication;
-
+  let prismaService: PrismaService
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+    const appModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
+    app = appModule.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe())
     await app.init();
-  });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+    prismaService = app.get(PrismaService)
+    await prismaService.cleanDatabase()
   });
+  afterAll(async () => {
+    app.close()
+  })
+  it.todo("hihi!");
+  it.todo("hihi!");
 });
