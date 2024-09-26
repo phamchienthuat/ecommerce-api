@@ -19,24 +19,142 @@ model User {
   password  String
   firstName String?
   lastName  String?
-  createAt  DateTime     @default(now())
-  updateAt  DateTime     @updatedAt
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 
-  details   UserDetail[] @relation("UserToUserDetail") // One-to-many relation
+  addresses UserAddress[]
 
   @@map("users")
 }
 
-model UserDetail {
+model Address {
+  id          Int      @id @default(autoincrement())
+  name        String?
+  addressLine String
+  districtId  Int
+  communeId   Int
+  provinceId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       UserAddress[]
+
+  @@map("address")
+}
+
+model UserAddress {
   id        Int      @id @default(autoincrement())
-  name      String
   userId    Int
-  address   String
-  phone     String
-  createAt  DateTime @default(now())
-  updateAt  DateTime @updatedAt
+  addressId Int
+  isDefault Boolean  @default(false)
 
-  user      User     @relation(fields: [userId], references: [id], name: "UserToUserDetail") // Foreign key relation
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  address   Address  @relation(fields: [addressId], references: [id], onDelete: Cascade)
 
-  @@map("users-detail")
+  @@map("user_address")
+}
+
+model Category {
+  id          Int        @id @default(autoincrement())
+  parentId    Int?
+  name        String
+  description String
+  image       String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  createdBy   Int?
+  updatedBy   Int?
+
+  parent      Category?  @relation("CategoryParent", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryParent")
+  products    Product[]
+
+  @@map("category")
+}
+
+model Product {
+  id          Int        @id @default(autoincrement())
+  title       String?
+  categoryId  Int
+  description String?
+  image       String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  createdBy   Int?
+  updatedBy   Int?
+
+  category    Category   @relation(fields: [categoryId], references: [id])
+
+  items       ProductItems[]  @relation("ProductItems")  
+  
+  @@map("product")
+}
+
+model ProductAttributes{
+  id          Int        @id @default(autoincrement())
+  categoryId  Int
+  name        String
+  type        String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  createdBy   Int?
+  updatedBy   Int?
+
+  options     AttributeOption[] @relation("ProductAttributeOptions")
+
+  @@map("product_attributes")
+}
+
+model AttributeOption{
+  id                  Int        @id @default(autoincrement())
+  productAttributeId  Int
+  value               String
+  type                String?
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  createdBy           Int?
+  updatedBy           Int?
+
+  productAttribute  ProductAttributes @relation("ProductAttributeOptions", fields: [productAttributeId], references: [id])
+
+  // Mối quan hệ nhiều-nhiều với ProductItems thông qua ProductionConfig
+  config            ProductionConfig[] @relation("AttributeOptionConfigs")
+
+  @@map("attribute_options")
+}
+
+model ProductItems{
+  id         Int        @id @default(autoincrement())
+  productId  Int
+  image      String?
+  price      Decimal
+  promotion_price Decimal?
+  VAT       Decimal
+  quantity  Int
+  SKU       String
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  createdBy           Int?
+  updatedBy           Int?
+
+  product         Product    @relation(fields: [productId], references: [id], name: "ProductItems")
+
+  // Mối quan hệ nhiều-nhiều với AttributeOption thông qua ProductionConfig
+  config          ProductionConfig[] @relation("ProductItemConfigs")
+
+  @@map("product_items")
+}
+
+model ProductionConfig {
+  id         Int        @id @default(autoincrement())
+  product_item_id Int
+  attributes_option_id Int
+  
+  // Quan hệ với ProductItems
+  productItem        ProductItems    @relation(fields: [product_item_id], references: [id], name: "ProductItemConfigs")
+  
+  // Quan hệ với AttributeOption
+  attributeOption    AttributeOption @relation(fields: [attributes_option_id], references: [id], name: "AttributeOptionConfigs")
+
+  @@map("production_config")
 }

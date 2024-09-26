@@ -31,7 +31,7 @@ export class AuthService {
                     email: true,
                     firstName: true,
                     lastName: true,
-                    createAt: true
+                    createdAt: true
                  }
             });        
             return user
