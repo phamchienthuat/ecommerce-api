@@ -23,15 +23,12 @@ export class AuthService {
                 data: {
                     email: authDTO.email,
                     password: hasdedPassword,
-                    firstName: authDTO.firstName,
-                    lastName: authDTO.lastName,
+                    userName: authDTO.userName,
                 },
                  select:{
                     id: true,
                     email: true,
-                    firstName: true,
-                    lastName: true,
-                    createdAt: true
+                    userName: true,
                  }
             });        
             return user
@@ -60,23 +57,37 @@ export class AuthService {
         if(!passwordMatched){
             throw new ForbiddenException(AuthError.PASSWORD_NOT_CORRECT)
         }
-        delete user.password
-        return await this.signJwtToken(user.id, user.email)
+        
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...userWithoutPassword } = user;
+
+        const tokens = await this.signJwtToken(user.id, user.email)
+
+        return {
+            user: userWithoutPassword,
+            ...tokens,
+        };
     }
 
-    async signJwtToken(userId: number , email: string):Promise<{accessToken: string}>{
+    async signJwtToken(userId: number , email: string):Promise<{accessToken: string, refreshToken:string}>{
         const payload = {
             sub: userId,
             email
         }
 
-        const jwtString = await this.jwtService.signAsync(payload, {
-            expiresIn: '10h',
-            secret: this.configService.get('JWT_SECRET')
+        const jwtAccessTokenString = await this.jwtService.signAsync(payload, {
+            expiresIn: '15m',
+            secret: this.configService.get('JWT_ACCESS_SECRET')
+        })
+
+        const jwtRefreshTokenString = await this.jwtService.signAsync(payload, {
+            expiresIn: '7d',
+            secret: this.configService.get('JWT_ACCESS_SECRET')
         })
 
         return{
-            accessToken: jwtString
+            accessToken: jwtAccessTokenString,
+            refreshToken: jwtRefreshTokenString
         }
     }
 }

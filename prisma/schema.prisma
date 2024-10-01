@@ -17,8 +17,7 @@ model User {
   id        Int          @id @default(autoincrement())
   email     String       @unique
   password  String
-  firstName String?
-  lastName  String?
+  userName String?
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 
@@ -36,7 +35,7 @@ model Address {
   provinceId  Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
+  phone       String
   users       UserAddress[]
 
   @@map("address")

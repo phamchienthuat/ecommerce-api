@@ -16,11 +16,8 @@ export class AuthDTO{
     
     @IsString()
     @IsNotEmpty()
-    firstName: string
+    userName: string
 
-    @IsString()
-    @IsNotEmpty()
-    lastName:string
 }
 
 export class AuthLoginDTO{
