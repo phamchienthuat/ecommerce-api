@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class UpdateDetailDto {
 
@@ -10,10 +10,30 @@ export class UpdateDetailDto {
   @IsNotEmpty()
   @IsOptional()
   @IsString()
-  address?: string;
+  addressLine?: string;
+
+  @IsNotEmpty()
+  @IsOptional()
+  @IsString()
+  districtId?:number
+
+  @IsNotEmpty()
+  @IsOptional()
+  @IsString()
+  communeId?:number
+
+  @IsNotEmpty()
+  @IsOptional()
+  @IsString()
+  provinceId?:number
   
   @IsNotEmpty()
   @IsOptional()
   @IsString()
   phone?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsBoolean()
+  isDefault?: boolean;
 }

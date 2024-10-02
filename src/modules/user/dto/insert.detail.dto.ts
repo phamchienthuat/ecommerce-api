@@ -1,16 +1,36 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class InsertDetailDto {
-
+export class InsertAddressDto {
   @IsNotEmpty()
   @IsString()
   name: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  address: string;
-  
+  addressLine: string;
+
+  @IsNotEmpty()
+  @IsInt()
+  @Type(() => Number) // Chuyển chuỗi sang số nguyên
+  districtId: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  @Type(() => Number) // Chuyển chuỗi sang số nguyên
+  communeId: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  @Type(() => Number) // Chuyển chuỗi sang số nguyên
+  provinceId: number;
+
   @IsNotEmpty()
   @IsString()
   phone: string;
+
+  @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean) // Chuyển chuỗi sang boolean nếu cần
+  isDefault: boolean;
 }

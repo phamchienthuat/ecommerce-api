@@ -1,19 +1,19 @@
 import {
-  // Body,
+  Body,
   Controller,
   // Delete,
-  // Get,
+  Get,
   // Param,
   // ParseIntPipe,
   // Patch,
-  // Post,
+  Post,
   UseGuards,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { GetUser } from '../../common/decorators';
 import { MyJwtGuard } from '../../common/guards';
 import { UserService } from './user.service';
-// import { InsertDetailDto, UpdateDetailDto } from './dto';
+import { InsertAddressDto,  } from './dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User')
@@ -25,23 +25,24 @@ export class UserController {
     return user;
   }
 
-  // @Get('detail')
-  // getDetails(@GetUser('id') userId: number) {
-  //   return this.userService.getDetails(userId);
-  // }
+  @Get('address')
+  getListAddress(@GetUser('id') userId: number) {
+    return this.userService.getListAddress(userId);
+  }
 
   // @Get('detail/:id')
   // getDetailById(@Param('id', ParseIntPipe) detailId: number) {
   //   return this.userService.getDetailById(detailId);
   // }
 
-  // @Post('detail')
-  // addDetail(
-  //   @GetUser('id') userId: number,
-  //   @Body() insertDetailDto: InsertDetailDto,
-  // ) {
-  //   return this.userService.addDetail(userId, insertDetailDto);
-  // } 
+  @Post('address')
+  addAddress(
+    @GetUser('id') userId: number,
+    @Body() insertAddressDto: InsertAddressDto,
+  ) {
+    console.log(insertAddressDto)
+    return this.userService.addAddress(userId, insertAddressDto);
+  } 
 
   // @Patch('detail/:id')
   // updateDetail(
