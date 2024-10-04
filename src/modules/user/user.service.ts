@@ -6,6 +6,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InsertAddressDto } from './dto';
+import { errorResponse, successResponse } from 'src/utils/api-response.util';
 
 @Injectable()
 export class UserService {
@@ -32,29 +33,18 @@ export class UserService {
       });
 
       const address = detail.map((ua) => ua.address);
+      
+      const pagination = {
+        currentPage: page,
+        limit,
+        totalRecords,
+        totalPages: Math.ceil(totalRecords / limit),
+      }
 
-      return {
-        success: true,
-        statusCode: HttpStatus.OK,
-        data: address,
-        pagination: {
-          currentPage: page,
-          limit,
-          totalRecords,
-          totalPages: Math.ceil(totalRecords / limit),
-        },
-        errors: [],
-      };
+      return successResponse(address, pagination, HttpStatus.OK)
     } catch (error) {
       console.log(error);
-      // Xử lý lỗi nếu xảy ra
-      return {
-        success: false,
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        data: [],
-        pagination: {},
-        errors: [error.message || 'Something went wrong'],
-      };
+      return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR, error.message || 'Something went wrong');
     }
   }
 
