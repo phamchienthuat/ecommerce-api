@@ -1,11 +1,11 @@
 import {
   Body,
   Controller,
-  // Delete,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
-  // Patch,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -14,7 +14,7 @@ import { User } from '@prisma/client';
 import { GetUser } from '../../common/decorators';
 import { MyJwtGuard } from '../../common/guards';
 import { UserService } from './user.service';
-import { InsertAddressDto } from './dto';
+import { InsertAddressDto, UpdateDetailDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User')
@@ -48,16 +48,16 @@ export class UserController {
     return this.userService.addAddress(userId, insertAddressDto);
   }
 
-  // @Patch('address/:id')
-  // updateDetail(
-  //   @Param('id', ParseIntPipe) detailId: number,
-  //   @Body() updateDetailDto: UpdateDetailDto,
-  // ) {
-  //   return this.userService.updateDetail(detailId, updateDetailDto);
-  // }
+  @Patch('address/:id')
+  updateDetail(
+    @Param('id', ParseIntPipe) detailId: number,
+    @Body() updateDetailDto: UpdateDetailDto,
+  ) {
+    return this.userService.updateDetail(detailId, updateDetailDto);
+  }
 
-  // @Delete('detail/:id')
-  // deleteDetail(@Param('id', ParseIntPipe) detailId: number) {
-  //   return this.userService.deleteDetail(detailId);
-  // }
+  @Delete('address/:id')
+  deleteDetail(@Param('id', ParseIntPipe) detailId: number) {
+    return this.userService.deleteDetail(detailId);
+  }
 }

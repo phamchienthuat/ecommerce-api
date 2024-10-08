@@ -2,16 +2,15 @@ export interface ApiResponse<T> {
   success: boolean;
   data: T[];
   pagination: {
-    currentPage?: number;
-    limit?: number;
+    page?: number;
+    itemPerPage?: number;
     totalRecords?: number;
-    totalPages?: number;
   };
   statusCode: number;
   errors: {
-    code?: number;
+    code: number;
     message: string;
-  };
+  } | null;
 }
 
 // Hàm phản hồi thành công
@@ -25,7 +24,7 @@ export function successResponse<T>(
     data,
     pagination,
     statusCode,
-    errors: [],
+    errors: null,
   };
 }
 
@@ -39,11 +38,9 @@ export function errorResponse<T>(
     data: [],
     pagination: {},
     statusCode,
-    errors: [
-      {
-        code: statusCode,
-        message,
-      },
-    ],
+    errors: {
+      code: statusCode,
+      message,
+    },
   };
 }
