@@ -1,6 +1,6 @@
 import { PrismaService } from './../prisma/prisma.service';
 import { ForbiddenException, HttpStatus, Injectable } from '@nestjs/common';
-import { InsertAddressDto, UpdateDetailDto } from './dto';
+import { InsertAddressDto, UpdateAddressDto } from './dto';
 import { errorResponse, successResponse } from 'src/utils/api-response.util';
 
 @Injectable()
@@ -74,7 +74,6 @@ export class UserService {
 
   async addAddress(userId: number, insertAddressDto: InsertAddressDto) {
     try {
-      console.log(insertAddressDto);
 
       const address = await this.prismaService.address.create({
         data: {
@@ -104,11 +103,11 @@ export class UserService {
     }
   }
 
-  async updateDetail(detailId: number, updateDetailDto: UpdateDetailDto) {
+  async updateAddress(addressId: number, updateAddressDto: UpdateAddressDto) {
     try {
       const detail = await this.prismaService.address.findUnique({
         where: {
-          id: detailId,
+          id: addressId,
         },
       });
 
@@ -117,23 +116,23 @@ export class UserService {
       }
 
       const updatedData = {
-        name: updateDetailDto.name,
-        addressLine: updateDetailDto.addressLine,
-        districtId: updateDetailDto.districtId
-          ? Number(updateDetailDto.districtId)
+        name: updateAddressDto.name,
+        addressLine: updateAddressDto.addressLine,
+        districtId: updateAddressDto.districtId
+          ? Number(updateAddressDto.districtId)
           : undefined,
-        communeId: updateDetailDto.communeId
-          ? Number(updateDetailDto.communeId)
+        communeId: updateAddressDto.communeId
+          ? Number(updateAddressDto.communeId)
           : undefined,
-        provinceId: updateDetailDto.provinceId
-          ? Number(updateDetailDto.provinceId)
+        provinceId: updateAddressDto.provinceId
+          ? Number(updateAddressDto.provinceId)
           : undefined,
-        phone: updateDetailDto.phone,
+        phone: updateAddressDto.phone,
       };
 
       const updatedDetail = await this.prismaService.address.update({
         where: {
-          id: detailId,
+          id: addressId,
         },
         data: updatedData,
       });
@@ -149,11 +148,11 @@ export class UserService {
     }
   }
 
-  async deleteDetail(detailId: number) {
+  async deleteAddress(addressId: number) {
     try {
       const detail = await this.prismaService.address.findUnique({
         where: {
-          id: detailId,
+          id: addressId,
         },
       });
 
@@ -163,7 +162,7 @@ export class UserService {
 
       await this.prismaService.address.delete({
         where: {
-          id: detailId,
+          id: addressId,
         },
       });
 

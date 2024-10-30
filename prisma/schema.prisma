@@ -14,12 +14,12 @@ datasource db {
 }
 
 model User {
-  id        Int          @id @default(autoincrement())
-  email     String       @unique
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
   password  String
-  userName String?
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  userName  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   addresses UserAddress[]
 
@@ -27,14 +27,14 @@ model User {
 }
 
 model Address {
-  id          Int      @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   name        String?
   addressLine String
   districtId  Int
   communeId   Int
   provinceId  Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   phone       String
   users       UserAddress[]
 
@@ -42,118 +42,134 @@ model Address {
 }
 
 model UserAddress {
-  id        Int      @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   userId    Int
   addressId Int
-  isDefault Boolean  @default(false)
+  isDefault Boolean @default(false)
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  address   Address  @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  address Address @relation(fields: [addressId], references: [id], onDelete: Cascade)
 
   @@map("user_address")
 }
 
 model Category {
-  id          Int        @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   parentId    Int?
   name        String
   description String
   image       String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  slug        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   createdBy   Int?
   updatedBy   Int?
 
-  parent      Category?  @relation("CategoryParent", fields: [parentId], references: [id])
-  children    Category[] @relation("CategoryParent")
-  products    Product[]
+  parent   Category?  @relation("CategoryParent", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryParent")
+  products Product[]
 
   @@map("category")
 }
 
 model Product {
-  id          Int        @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   title       String?
   categoryId  Int
   description String?
-  image       String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   createdBy   Int?
   updatedBy   Int?
 
-  category    Category   @relation(fields: [categoryId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
 
-  items       ProductItems[]  @relation("ProductItems")  
-  
+  items ProductItems[] @relation("ProductItems")
+
+  images   ProductionImages[] @relation("ProductImages")
+
   @@map("product")
 }
 
-model ProductAttributes{
-  id          Int        @id @default(autoincrement())
-  categoryId  Int
-  name        String
-  type        String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  createdBy   Int?
-  updatedBy   Int?
+model ProductAttributes {
+  id         Int      @id @default(autoincrement())
+  categoryId Int?
+  name       String
+  type       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  createdBy  Int?
+  updatedBy  Int?
 
-  options     AttributeOption[] @relation("ProductAttributeOptions")
+  options AttributeOption[] @relation("ProductAttributeOptions")
 
   @@map("product_attributes")
 }
 
-model AttributeOption{
-  id                  Int        @id @default(autoincrement())
-  productAttributeId  Int
-  value               String
-  type                String?
-  createdAt           DateTime   @default(now())
-  updatedAt           DateTime   @updatedAt
-  createdBy           Int?
-  updatedBy           Int?
+model AttributeOption {
+  id                 Int      @id @default(autoincrement())
+  productAttributeId Int
+  value              String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  createdBy          Int?
+  updatedBy          Int?
 
-  productAttribute  ProductAttributes @relation("ProductAttributeOptions", fields: [productAttributeId], references: [id])
+  productAttribute ProductAttributes @relation("ProductAttributeOptions", fields: [productAttributeId], references: [id])
 
   // Mối quan hệ nhiều-nhiều với ProductItems thông qua ProductionConfig
-  config            ProductionConfig[] @relation("AttributeOptionConfigs")
+  config ProductionConfig[] @relation("AttributeOptionConfigs")
 
   @@map("attribute_options")
 }
 
-model ProductItems{
-  id         Int        @id @default(autoincrement())
-  productId  Int
-  image      String?
-  price      Decimal
-  promotion_price Decimal?
-  VAT       Decimal
-  quantity  Int
-  SKU       String
-  createdAt           DateTime   @default(now())
-  updatedAt           DateTime   @updatedAt
-  createdBy           Int?
-  updatedBy           Int?
+model ProductItems {
+  id              Int      @id @default(autoincrement())
+  productId       Int
+  price           Decimal
+  promotionPrice Decimal?
+  VAT             Decimal
+  quantity        Int
+  SKU             String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdBy       Int?
+  updatedBy       Int?
 
-  product         Product    @relation(fields: [productId], references: [id], name: "ProductItems")
+  product Product @relation(fields: [productId], references: [id], name: "ProductItems")
 
   // Mối quan hệ nhiều-nhiều với AttributeOption thông qua ProductionConfig
-  config          ProductionConfig[] @relation("ProductItemConfigs")
+  config ProductionConfig[] @relation("ProductItemConfigs")
+
+  images   ProductionImages[] @relation("ProductItemImages")
 
   @@map("product_items")
 }
 
 model ProductionConfig {
-  id         Int        @id @default(autoincrement())
-  product_item_id Int
-  attributes_option_id Int
-  
+  id                   Int @id @default(autoincrement())
+  productItemId      Int
+  attributesOptionId Int
+
   // Quan hệ với ProductItems
-  productItem        ProductItems    @relation(fields: [product_item_id], references: [id], name: "ProductItemConfigs")
-  
+  productItem ProductItems @relation(fields: [productItemId], references: [id], name: "ProductItemConfigs")
+
   // Quan hệ với AttributeOption
-  attributeOption    AttributeOption @relation(fields: [attributes_option_id], references: [id], name: "AttributeOptionConfigs")
+  attributeOption AttributeOption @relation(fields: [attributesOptionId], references: [id], name: "AttributeOptionConfigs")
 
   @@map("production_config")
+}
+
+model ProductionImages {
+  id              Int    @id @default(autoincrement())
+  productId      Int?
+  productItemId Int?
+  imageFileName  String
+  // Quan hệ với Product
+  product        Product?      @relation(fields: [productId], references: [id], name: "ProductImages")
+
+  // Quan hệ với ProductItems
+  productItem    ProductItems? @relation(fields: [productItemId], references: [id], name: "ProductItemImages")
+
+  @@map("production_images")
 }

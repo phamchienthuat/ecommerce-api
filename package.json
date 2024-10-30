@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "prisma:dev": "prisma migrate dev",
     "prisma:dev:deploy": "prisma migrate deploy",
     "db:dev:remove": "docker compose rm my-ecommerce --stop --force --volumes",
     "db:dev:create": "docker compose up my-ecommerce --detach",

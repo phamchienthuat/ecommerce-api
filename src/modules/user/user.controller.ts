@@ -14,7 +14,7 @@ import { User } from '@prisma/client';
 import { GetUser } from '../../common/decorators';
 import { MyJwtGuard } from '../../common/guards';
 import { UserService } from './user.service';
-import { InsertAddressDto, UpdateDetailDto } from './dto';
+import { InsertAddressDto, UpdateAddressDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User')
@@ -49,15 +49,15 @@ export class UserController {
   }
 
   @Patch('address/:id')
-  updateDetail(
-    @Param('id', ParseIntPipe) detailId: number,
-    @Body() updateDetailDto: UpdateDetailDto,
+  updateAddress(
+    @Param('id', ParseIntPipe) addressId: number,
+    @Body() updateAddressDto: UpdateAddressDto,
   ) {
-    return this.userService.updateDetail(detailId, updateDetailDto);
+    return this.userService.updateAddress(addressId, updateAddressDto);
   }
 
   @Delete('address/:id')
-  deleteDetail(@Param('id', ParseIntPipe) detailId: number) {
-    return this.userService.deleteDetail(detailId);
+  deleteAddress(@Param('id', ParseIntPipe) addressId: number) {
+    return this.userService.deleteAddress(addressId);
   }
 }
