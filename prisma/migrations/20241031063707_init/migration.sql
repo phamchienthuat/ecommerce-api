@@ -20,6 +20,7 @@ CREATE TABLE "address" (
     "provinceId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "phone" TEXT NOT NULL,
 
     CONSTRAINT "address_pkey" PRIMARY KEY ("id")
 );
@@ -41,6 +42,7 @@ CREATE TABLE "category" (
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "image" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "createdBy" INTEGER,
@@ -55,7 +57,6 @@ CREATE TABLE "product" (
     "title" TEXT,
     "categoryId" INTEGER NOT NULL,
     "description" TEXT,
-    "image" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "createdBy" INTEGER,
@@ -67,7 +68,7 @@ CREATE TABLE "product" (
 -- CreateTable
 CREATE TABLE "product_attributes" (
     "id" SERIAL NOT NULL,
-    "categoryId" INTEGER NOT NULL,
+    "categoryId" INTEGER,
     "name" TEXT NOT NULL,
     "type" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -83,7 +84,6 @@ CREATE TABLE "attribute_options" (
     "id" SERIAL NOT NULL,
     "productAttributeId" INTEGER NOT NULL,
     "value" TEXT NOT NULL,
-    "type" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "createdBy" INTEGER,
@@ -96,9 +96,8 @@ CREATE TABLE "attribute_options" (
 CREATE TABLE "product_items" (
     "id" SERIAL NOT NULL,
     "productId" INTEGER NOT NULL,
-    "image" TEXT,
     "price" DECIMAL(65,30) NOT NULL,
-    "promotion_price" DECIMAL(65,30),
+    "promotionPrice" DECIMAL(65,30),
     "VAT" DECIMAL(65,30) NOT NULL,
     "quantity" INTEGER NOT NULL,
     "SKU" TEXT NOT NULL,
@@ -113,10 +112,20 @@ CREATE TABLE "product_items" (
 -- CreateTable
 CREATE TABLE "production_config" (
     "id" SERIAL NOT NULL,
-    "product_item_id" INTEGER NOT NULL,
-    "attributes_option_id" INTEGER NOT NULL,
+    "productItemId" INTEGER NOT NULL,
+    "attributesOptionId" INTEGER NOT NULL,
 
     CONSTRAINT "production_config_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "production_images" (
+    "id" SERIAL NOT NULL,
+    "productId" INTEGER,
+    "productItemId" INTEGER,
+    "imageFileName" TEXT NOT NULL,
+
+    CONSTRAINT "production_images_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -141,7 +150,13 @@ ALTER TABLE "attribute_options" ADD CONSTRAINT "attribute_options_productAttribu
 ALTER TABLE "product_items" ADD CONSTRAINT "product_items_productId_fkey" FOREIGN KEY ("productId") REFERENCES "product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "production_config" ADD CONSTRAINT "production_config_product_item_id_fkey" FOREIGN KEY ("product_item_id") REFERENCES "product_items"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "production_config" ADD CONSTRAINT "production_config_productItemId_fkey" FOREIGN KEY ("productItemId") REFERENCES "product_items"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "production_config" ADD CONSTRAINT "production_config_attributes_option_id_fkey" FOREIGN KEY ("attributes_option_id") REFERENCES "attribute_options"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "production_config" ADD CONSTRAINT "production_config_attributesOptionId_fkey" FOREIGN KEY ("attributesOptionId") REFERENCES "attribute_options"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "production_images" ADD CONSTRAINT "production_images_productId_fkey" FOREIGN KEY ("productId") REFERENCES "product"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "production_images" ADD CONSTRAINT "production_images_productItemId_fkey" FOREIGN KEY ("productItemId") REFERENCES "product_items"("id") ON DELETE SET NULL ON UPDATE CASCADE;

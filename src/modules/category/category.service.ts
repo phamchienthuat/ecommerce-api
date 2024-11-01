@@ -18,6 +18,9 @@ export class CategoryService {
       const detail = await this.prismaService.category.findMany({
         take,
         skip,
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
 
       const pagination = {
@@ -26,7 +29,7 @@ export class CategoryService {
         totalRecords,
       };
 
-      return successResponse([detail], pagination, HttpStatus.OK);
+      return successResponse(detail, pagination, HttpStatus.OK);
     } catch (error) {
       console.log(error);
       return errorResponse(
@@ -127,21 +130,21 @@ export class CategoryService {
     }
   }
 
-  async deleteCategory(categoryId: number) {
+  async deleteCategories(categoryIds: number[]) {
     try {
-      const detail = await this.prismaService.category.findUnique({
+      const details = await this.prismaService.category.findMany({
         where: {
-          id: categoryId,
+          id: { in: categoryIds },
         },
       });
 
-      if (!detail) {
-        throw new ForbiddenException('Cannot find category to delete');
+      if (details.length !== categoryIds.length) {
+        throw new ForbiddenException('Some categories were not found');
       }
 
-      await this.prismaService.category.delete({
+      await this.prismaService.category.deleteMany({
         where: {
-          id: categoryId,
+          id: { in: categoryIds },
         },
       });
 

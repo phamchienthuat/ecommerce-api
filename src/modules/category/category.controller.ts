@@ -43,8 +43,8 @@ export class CategoryController {
   }
 
   @UseGuards(MyJwtGuard)
-  @Delete('/:id')
-  deleteAddress(@Param('id', ParseIntPipe) categoryId: number) {
-    return this.categoryService.deleteCategory(categoryId);
+  @Delete('')
+  deleteCategories(@Body('categoryIds') categoryIds: number[]) {
+    return this.categoryService.deleteCategories(categoryIds);
   }
 }
