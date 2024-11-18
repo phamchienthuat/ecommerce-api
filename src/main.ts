@@ -13,9 +13,17 @@ async function bootstrap() {
     credentials: true,
   });
   const config = new DocumentBuilder()
-  .setTitle('Ecommerce')
+  .setTitle('Ecommerce API + NestJs')
   .setDescription('The Ecommerce API description')
-  .setVersion('0.1')
+  .setVersion('1.0')
+  .addBearerAuth(
+    {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+    },
+    'accessToken',
+  )
   .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

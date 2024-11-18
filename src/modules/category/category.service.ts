@@ -75,7 +75,7 @@ export class CategoryService {
             : null,
           name: insertCategoryDto.name,
           description: insertCategoryDto.description,
-          image: insertCategoryDto.image,
+          image: null,
           slug: insertCategoryDto.slug,
         },
       });

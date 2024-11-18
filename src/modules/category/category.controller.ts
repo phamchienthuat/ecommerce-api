@@ -1,11 +1,12 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { MyJwtGuard } from 'src/common/guards';
 import { CategoryService } from './category.service';
 import { GetUser } from 'src/common/decorators';
 import { InsertCategoryDto, UpdateCategoryDto } from './dto';
 
 @ApiTags('Category')
+@ApiBearerAuth('accessToken')
 @Controller('category')
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
@@ -30,6 +31,7 @@ export class CategoryController {
     @GetUser('id') userId: number,
     @Body() insertCategoryDto: InsertCategoryDto,
   ) {
+    console.log(insertCategoryDto)
     return this.categoryService.addCategory(userId, insertCategoryDto);
   }
 
@@ -44,7 +46,13 @@ export class CategoryController {
 
   @UseGuards(MyJwtGuard)
   @Delete('')
-  deleteCategories(@Body('categoryIds') categoryIds: number[]) {
+  deleteCategories(@Query('ids') ids: string) {
+    const categoryIds = ids.split(',').map((id) => Number(id));
+
+    if (categoryIds.some(isNaN)) {
+      throw new Error('Invalid category ID(s) provided.');
+    }
+    
     return this.categoryService.deleteCategories(categoryIds);
   }
 }
