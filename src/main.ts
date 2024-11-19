@@ -2,6 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { join } from 'path';
+import { existsSync, mkdirSync } from 'fs';
+import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -28,6 +31,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   app.useGlobalPipes(new ValidationPipe());
+  app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
+  const uploadDir = join(process.cwd(), 'uploads');
+  if (!existsSync(uploadDir)) {
+    mkdirSync(uploadDir);
+  }
   await app.listen(process.env.PORT);
   console.log(`http://localhost:${process.env.PORT}/api/`)
 }

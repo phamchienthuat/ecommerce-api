@@ -31,7 +31,6 @@ export class CategoryController {
     @GetUser('id') userId: number,
     @Body() insertCategoryDto: InsertCategoryDto,
   ) {
-    console.log(insertCategoryDto)
     return this.categoryService.addCategory(userId, insertCategoryDto);
   }
 
