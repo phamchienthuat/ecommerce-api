@@ -1,18 +1,30 @@
-import { Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Controller, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('upload')
 @Controller('upload')
 export class UploadController {
 
-    @Post('/uploadImage')
-    
-    @UseInterceptors(FileInterceptor('file', {
-        limits: { fileSize: Math.pow(1024, 2) * 3 }
-    }))    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async uploadImage(@UploadedFile() file) {
-        const fileUrl = `http://localhost:${process.env.PORT}/uploads/${file.filename}`; 
-        return {
-           url: fileUrl,
-        };
+  @Post('/uploadImages')
+  @UseInterceptors(FilesInterceptor('files', 10, { 
+    limits: { fileSize: Math.pow(1024, 2) * 3 },
+  }))
+  async uploadImages(@UploadedFiles() files: Array<Express.Multer.File>) {
+    // Log thông tin file
+    console.log('Received files:', files);
+
+    if (!files || files.length === 0) {
+      return { message: 'No files received' };
     }
+
+    const fileUrls = files.map(file => ({
+      filename: file.filename,
+      url: `http://localhost:${process.env.PORT}/uploads/${file.filename}`,
+    }));
+
+    return {
+      files: fileUrls,
+    };
+  }
 }

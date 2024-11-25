@@ -36,7 +36,7 @@ export class InsertCategoryDto {
   })
   @IsOptional()
   @IsString()
-  image: object;
+  image: string;
 
   @ApiProperty({
     description: "slug",
