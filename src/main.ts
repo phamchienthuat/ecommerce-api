@@ -11,12 +11,12 @@ async function bootstrap() {
   const apiPrefix = process.env.API_PREFIX || 'api';
   app.setGlobalPrefix(apiPrefix);
   app.enableCors({
-    origin: 'http://localhost:5173',
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
   const config = new DocumentBuilder()
-  .setTitle('Ecommerce API + NestJs')
+  .setTitle('Ecommerce API (NestJs + PostGreSQL)')
   .setDescription('The Ecommerce API description')
   .setVersion('1.0')
   .addBearerAuth(

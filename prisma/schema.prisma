@@ -73,20 +73,25 @@ model Category {
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  title       String?
-  categoryId  Int
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  createdBy   Int?
-  updatedBy   Int?
+  id                Int      @id @default(autoincrement())
+  name              String?
+  categoryId        Int
+  description       String?
+  priceFrom         Decimal?
+  priceTo           Decimal?
+  price             Decimal
+  promotionPrice    Decimal?
+  currencyId        Int?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  createdBy         Int?
+  updatedBy         Int?
+  
+  category          Category @relation(fields: [categoryId], references: [id])
 
-  category Category @relation(fields: [categoryId], references: [id])
+  items             ProductItems[] @relation("ProductItems")
 
-  items ProductItems[] @relation("ProductItems")
-
-  images   ProductionImages[] @relation("ProductImages")
+  images            ProductionImages[] @relation("ProductImages")
 
   @@map("product")
 }
@@ -127,10 +132,10 @@ model ProductItems {
   id              Int      @id @default(autoincrement())
   productId       Int
   price           Decimal
-  promotionPrice Decimal?
-  VAT             Decimal
+  promotionPrice  Decimal?
+  VAT             Decimal?
   quantity        Int
-  SKU             String
+  SKU             String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   createdBy       Int?
@@ -139,7 +144,7 @@ model ProductItems {
   product Product @relation(fields: [productId], references: [id], name: "ProductItems")
 
   // Mối quan hệ nhiều-nhiều với AttributeOption thông qua ProductionConfig
-  config ProductionConfig[] @relation("ProductItemConfigs")
+  attributes ProductionConfig[] @relation("ProductItemConfigs")
 
   images   ProductionImages[] @relation("ProductItemImages")
 
@@ -165,6 +170,7 @@ model ProductionImages {
   productId      Int?
   productItemId Int?
   imageFileName  String
+  isMain          Boolean
   // Quan hệ với Product
   product        Product?      @relation(fields: [productId], references: [id], name: "ProductImages")
 

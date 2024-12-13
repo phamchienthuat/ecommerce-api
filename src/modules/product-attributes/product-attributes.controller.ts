@@ -21,7 +21,7 @@ import {
   UpdateAttributeOptionDto,
 } from './dto';
 
-@ApiTags('product-attribute')
+@ApiTags('Product-Attribute')
 @UseGuards(MyJwtGuard)
 @Controller('product-attribute')
 export class ProductAttributesController {

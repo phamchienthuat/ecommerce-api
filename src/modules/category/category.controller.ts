@@ -6,7 +6,6 @@ import { GetUser } from 'src/common/decorators';
 import { InsertCategoryDto, UpdateCategoryDto } from './dto';
 
 @ApiTags('Category')
-@ApiBearerAuth('accessToken')
 @Controller('category')
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
@@ -26,6 +25,7 @@ export class CategoryController {
   }
 
   @UseGuards(MyJwtGuard)
+  @ApiBearerAuth('accessToken')
   @Post('')
   addCategory(
     @GetUser('id') userId: number,
@@ -35,6 +35,7 @@ export class CategoryController {
   }
 
   @UseGuards(MyJwtGuard)
+  @ApiBearerAuth('accessToken')
   @Patch('/:id')
   updateCategory(
     @Param('id', ParseIntPipe) categoryId: number,
@@ -44,6 +45,7 @@ export class CategoryController {
   }
 
   @UseGuards(MyJwtGuard)
+  @ApiBearerAuth('accessToken')
   @Delete('')
   deleteCategories(@Query('ids') ids: string) {
     const categoryIds = ids.split(',').map((id) => Number(id));
