@@ -6,8 +6,6 @@ import { errorResponse, successResponse } from 'src/utils/api-response.util';
 @Injectable()
 export class ProductService {
     constructor(private prismaService: PrismaService) {}
-
-
     async addProduct(userId: number, insertProductDto: InsertProductDto) {
     try {
         const detail = await this.prismaService.product.create({
@@ -15,11 +13,12 @@ export class ProductService {
                 name: insertProductDto.name,
                 description: insertProductDto.description,
                 categoryId: Number(insertProductDto.categoryId),
-                priceFrom: insertProductDto.description,
+                priceFrom: insertProductDto.priceFrom,
                 priceTo: insertProductDto.priceTo,
                 price: insertProductDto.price,
                 promotionPrice: insertProductDto.promotionPrice,
                 currencyId: insertProductDto.currencyId,
+                createdBy: userId
             },
         });
 

@@ -75,8 +75,9 @@ export class CategoryService {
             : null,
           name: insertCategoryDto.name,
           description: insertCategoryDto.description,
-          image: null,
+          image: insertCategoryDto.image,
           slug: insertCategoryDto.slug,
+          createdBy: userId
         },
       });
 
@@ -90,6 +91,7 @@ export class CategoryService {
   }
 
   async updateCategory(
+    userId: number,
     categoryId: number,
     updateCategoryDto: UpdateCategoryDto,
   ) {
@@ -116,6 +118,7 @@ export class CategoryService {
           description: updateCategoryDto.description,
           image: updateCategoryDto.image,
           slug: updateCategoryDto.slug,
+          updatedBy: userId
         },
       });
 

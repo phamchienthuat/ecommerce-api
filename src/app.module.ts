@@ -6,6 +6,8 @@ import { UserModule } from './modules/user/user.module';
 import { CategoryModule } from './modules/category/category.module';
 import { ProductAttributesModule } from './modules/product-attributes/product-attributes.module';
 import { UploadModule } from './modules/upload/upload.module';
+import { ProductModule } from './modules/product/product.module';
+import { CurrencyModule } from './modules/currency/currency.module';
 
 @Module({
   imports: [
@@ -15,7 +17,9 @@ import { UploadModule } from './modules/upload/upload.module';
     UserModule,
     CategoryModule,
     ProductAttributesModule,
-    UploadModule
+    UploadModule,
+    ProductModule,
+    CurrencyModule
   ],
   controllers: [],
   providers: [],

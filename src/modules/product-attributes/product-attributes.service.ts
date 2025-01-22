@@ -75,6 +75,7 @@ export class ProductAttributesService {
             : null,
           name: insertAttributeDto.name,
           type: insertAttributeDto.type,
+          createdBy: userId
         },
       });
 
@@ -89,6 +90,7 @@ export class ProductAttributesService {
   }
 
   async updateProductAttribute(
+    userId: number,
     productAttributeId: number,
     updateAttributeDto: UpdateAttributeDto,
   ) {
@@ -112,6 +114,7 @@ export class ProductAttributesService {
             ? Number(updateAttributeDto.categoryId)
             : null,
           name: updateAttributeDto.name,
+          updatedBy: userId
         },
       });
 
@@ -224,6 +227,7 @@ export class ProductAttributesService {
             ? Number(productAttributeId)
             : null,
           value: insertAttributeOptionDto.value,
+          createdBy: userId
         },
       });
 
@@ -238,6 +242,7 @@ export class ProductAttributesService {
   }
 
   async updateAttributeOption(
+    userId: number,
     productAttributeId: number,
     attributeOptionId: number,
     updateAttributeOptionDto: UpdateAttributeOptionDto,
@@ -262,6 +267,7 @@ export class ProductAttributesService {
             ? Number(productAttributeId)
             : null,
           value: updateAttributeOptionDto.value,
+          updatedBy: userId
         },
       });
 

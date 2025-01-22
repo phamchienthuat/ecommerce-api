@@ -38,10 +38,11 @@ export class CategoryController {
   @ApiBearerAuth('accessToken')
   @Patch('/:id')
   updateCategory(
+    @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) categoryId: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    return this.categoryService.updateCategory(categoryId, updateCategoryDto);
+    return this.categoryService.updateCategory(userId, categoryId, updateCategoryDto);
   }
 
   @UseGuards(MyJwtGuard)

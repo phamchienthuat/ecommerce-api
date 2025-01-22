@@ -60,10 +60,12 @@ export class ProductAttributesController {
   @UseGuards(MyJwtGuard)
   @Patch('/:id')
   updateProductAttribute(
+    @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) productAttributeId: number,
     @Body() updateAttributeDto: UpdateAttributeDto,
   ) {
     return this.productAttributeService.updateProductAttribute(
+      userId,
       productAttributeId,
       updateAttributeDto,
     );
@@ -114,11 +116,13 @@ export class ProductAttributesController {
   @UseGuards(MyJwtGuard)
   @Patch(':id/option/:id2')
   updateAttributeOption(
+    @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) productAttributeId: number,
     @Param('id2', ParseIntPipe) attributeOptionId: number,
     @Body() updateAttributeOptionDto: UpdateAttributeOptionDto,
   ) {
     return this.productAttributeService.updateAttributeOption(
+      userId,
       productAttributeId,
       attributeOptionId,
       updateAttributeOptionDto,

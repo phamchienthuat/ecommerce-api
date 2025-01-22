@@ -89,9 +89,12 @@ model Product {
   
   category          Category @relation(fields: [categoryId], references: [id])
 
+  currency         Currency? @relation(fields: [currencyId], references: [id])
+
   items             ProductItems[] @relation("ProductItems")
 
   images            ProductionImages[] @relation("ProductImages")
+
 
   @@map("product")
 }
@@ -178,4 +181,14 @@ model ProductionImages {
   productItem    ProductItems? @relation(fields: [productItemId], references: [id], name: "ProductItemImages")
 
   @@map("production_images")
+}
+
+model Currency{
+  id        Int     @id @default(autoincrement())
+  name      String
+  code      String
+  symbol    String
+  products  Product[]
+
+  @@map("currency")
 }
