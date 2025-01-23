@@ -88,7 +88,7 @@ export class InsertProductDto{
     })
     @IsOptional()
     @IsArray()
-    variants: Array<any>
+    items: Array<Variants>
 
     @ApiProperty({
         description: "Tag",
@@ -97,11 +97,19 @@ export class InsertProductDto{
     @IsOptional()
     @IsArray()
     tag: Array<number>
+
+    @ApiProperty({
+        description: "Slug",
+        example: ""
+    })
+    @IsNotEmpty()
+    @IsString()
+    slug: string
 }
 
 export interface Attribute {
-    product_item_id: number;
-    attributes_option_id: number;
+    product_item_id?: number;
+    id: number;
     name: string;
     value: string;
 }
